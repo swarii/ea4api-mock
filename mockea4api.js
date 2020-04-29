@@ -17,25 +17,23 @@ const delayBetweenTransactions = (60 / numberOfTransactions) * 1000
 let fileOutputName
 let log = loadTransactionTemplate()
 
-if ( mode == 'continuous')   runContinous()
-if ( mode == 'now')   runNow()
+run()
 
 //End
 
-async function runContinous() {
+async function run() {
     let dataSet = await loadDataSet(dataSetFile)
-    cron.schedule(cronExpression, () => {
-        fileOutputName = `${outputDirectory}/ea4apijson_${Date.now()}.log`
-        console.log(`Task triggered at ${(new Date()).toISOString()}. ${numberOfTransactions} transactions will be written to ${fileOutputName}`)
-        mock(numberOfTransactions, dataSet)
+
+    if (mode == 'once') generate(dataSet)
+    else cron.schedule(cronExpression, () => {
+        generate(dataSet)
     })
 }
 
-async function runNow() {
-    let dataSet = await loadDataSet(dataSetFile)
+async function generate(data) {   
     fileOutputName = `${outputDirectory}/ea4apijson_${Date.now()}.log`
     console.log(`Task triggered at ${(new Date()).toISOString()}. ${numberOfTransactions} transactions will be written to ${fileOutputName}`)
-    mock(numberOfTransactions, dataSet)
+    mock(numberOfTransactions, data)
 }
 
 async function loadDataSet(file) {
@@ -99,8 +97,8 @@ async function mockTransaction(data) {
     log.legs[0].timestamp = date
     log.legs[1].timestamp = date
 
-    log.serviceContexts[0].org = randomItem.org != null ? randomItem.org : null  
-    log.serviceContexts[0].app = randomItem.clientapp != null ? randomItem.clientapp : null 
+    log.serviceContexts[0].org = randomItem.org
+    log.serviceContexts[0].app = randomItem.clientapp
 
     log.serviceContexts[0].service = randomItem.api
     log.legs[0].serviceName = randomItem.api
