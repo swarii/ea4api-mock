@@ -14,7 +14,6 @@ const mode = properties.get('Mode')
 const cronExpression = '* * * * *'
 const delayBetweenTransactions = (60 / numberOfTransactions) * 1000
 
-let fileOutputName
 let log = loadTransactionTemplate()
 
 run()
@@ -28,12 +27,6 @@ async function run() {
     else cron.schedule(cronExpression, () => {
         generate(dataSet)
     })
-}
-
-async function generate(data) {   
-    fileOutputName = `${outputDirectory}/ea4apijson_${Date.now()}.log`
-    console.log(`Task triggered at ${(new Date()).toISOString()}. ${numberOfTransactions} transactions will be written to ${fileOutputName}`)
-    mock(numberOfTransactions, data)
 }
 
 async function loadDataSet(file) {
@@ -51,16 +44,20 @@ async function loadDataSet(file) {
     return dataWeighted
 }
 
-async function mock(_numberOfTransactions, data) {
+async function generate(data) {   
+    let fileOutputName = `${outputDirectory}/ea4apijson_${Date.now()}.log`
+    console.log(`Task triggered at ${(new Date()).toISOString()}. ${numberOfTransactions} transactions will be written to ${fileOutputName}`)
+    mock(numberOfTransactions, data, fileOutputName)
+}
+
+async function mock(_numberOfTransactions, data, fileOutputName) {
     for (let i = 0; i < _numberOfTransactions; i++) {
         await sleep(delayBetweenTransactions)
-        await writeToFile(await mockTransaction(data))
+        await writeToFile(await mockTransaction(data), fileOutputName)
     }
 }
 
-
-
-function writeToFile(content) {
+function writeToFile(content, fileOutputName) {
     return new Promise((resolve, reject) => {
         fs.appendFile(fileOutputName, JSON.stringify(content) + '\r\n', (err) => {
             if (err) {
@@ -76,19 +73,13 @@ function getRandomItem(data) {
     return new Promise((resolve, reject) => {
         let index = Math.ceil(Math.random() * data.length)
         let randomItem = data[index - 1]
-        if (randomItem == null)
-            reject(new Error(`empty randomItem. dataset lenght ${data.length} random index ${index}`))
         resolve(randomItem)
     })
 }
 
 async function mockTransaction(data) {
+    
     let randomItem = await getRandomItem(data)
-
-    if (randomItem == null) {
-        console.log("received empty randomItem")
-        return
-    }
 
     log.correlationId = uuid.v4()
 
@@ -109,7 +100,6 @@ async function mockTransaction(data) {
     log.legs[1].operation = randomItem.method
 
     log.protocol = 'http'
-
 
     if (randomItem.failure) log.status = 'failure'
     else if (randomItem.exception) log.status = 'exception'
