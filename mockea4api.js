@@ -11,6 +11,7 @@ const properties = PropertiesReader(`${__dirname}/app.properties`)
 const dataSetFile = properties.get('DataSetFile')
 const numberOfTransactions = parseInt(properties.get('NumberOfTransactions'))
 const outputDirectory = properties.get('OutputDirectory')
+const trigger = properties.get('Trigger')
 const mode = properties.get('Mode')
 //cron expression to fire once every minute tic
 const cronExpression = '* * * * *'
@@ -19,16 +20,15 @@ const delayBetweenTransactions = (60 / numberOfTransactions) * 1000
 run()
 
 async function run() {
-    await dataset.load(dataSetFile)
-    if (mode == 'once') 
-        generate()
-    else 
+    await dataset.load(mode, dataSetFile)
+    if (trigger == 'once') generate()
+    else
         cron.schedule(cronExpression, () => {
             generate()
         })
 }
 
-async function generate() {   
+async function generate() {
     let fileOutputName = `${outputDirectory}/ea4apijson_${Date.now()}.log`
     console.log(`Task triggered at ${(new Date()).toISOString()}. ${numberOfTransactions} transactions will be written to ${fileOutputName}`)
     for (let i = 0; i < numberOfTransactions; i++) {
@@ -50,5 +50,3 @@ function writeToFile(content, fileOutputName) {
         })
     })
 }
-
-
