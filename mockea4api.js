@@ -2,17 +2,17 @@
 const cron = require('node-cron')
 const fs = require('fs')
 const sleep = require('util').promisify(setTimeout)
-const properties = PropertiesReader(`${__dirname}/app.properties`)
+const PropertiesReader = require('properties-reader')
 //import js files
 const transaction = require('./transaction')
 const dataset = require('./dataset')
 //load properties
-const PropertiesReader = require('properties-reader')
+const properties = PropertiesReader(`${__dirname}/app.properties`)
 const dataSetFile = properties.get('DataSetFile')
 const numberOfTransactions = parseInt(properties.get('NumberOfTransactions'))
 const outputDirectory = properties.get('OutputDirectory')
 const mode = properties.get('Mode')
-
+//cron expression to fire once every minute tic
 const cronExpression = '* * * * *'
 const delayBetweenTransactions = (60 / numberOfTransactions) * 1000
 
