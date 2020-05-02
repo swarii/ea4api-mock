@@ -1,5 +1,5 @@
 ﻿method,api,org,clientapp,weigth,responseTimeSLABreach,failure,exception
-DataProviderImageGet,AHNProviders,AHN,app1,100,,,
-DataProviderImageGet,AHNProviders,AHN,app1,10,TRUE,,
-DataProviderImageGet,AHNProviders,AHN,app1,5,,TRUE,
-DataProviderImageGet,AHNProviders,AHN,app1,5,,,TRUE
+DataProviderImageGet,,,,100,,,
+DataProviderImageGet,,,,10,TRUE,,
+DataProviderImageGet,,,,5,,TRUE,
+DataProviderImageGet,,,,5,,,TRUE
