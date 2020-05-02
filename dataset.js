@@ -24,6 +24,12 @@ async function load(file) {
     }    
 }
 
+function getRandomItem() {
+    let index = Math.ceil(Math.random() * dataWeighted.length)
+    let randomItem = dataWeighted[index - 1]
+    return randomItem
+}
+
 function resolveWeight(weight,status){
     if(status == 'success') 
         return weight == '' ? 1 : parseInt(weight) 
@@ -48,8 +54,3 @@ function changeStatus(item, success, responseTimeSLABreach, failure, exception){
     return clone
 }
 
-function getRandomItem() {
-    let index = Math.ceil(Math.random() * dataWeighted.length)
-    let randomItem = dataWeighted[index - 1]
-    return randomItem
-}

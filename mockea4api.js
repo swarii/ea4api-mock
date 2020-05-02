@@ -2,12 +2,12 @@
 const cron = require('node-cron')
 const fs = require('fs')
 const sleep = require('util').promisify(setTimeout)
-const PropertiesReader = require('properties-reader')
 const properties = PropertiesReader(`${__dirname}/app.properties`)
-//import js Files
+//import js files
 const transaction = require('./transaction')
 const dataset = require('./dataset')
-//Load Properties
+//load properties
+const PropertiesReader = require('properties-reader')
 const dataSetFile = properties.get('DataSetFile')
 const numberOfTransactions = parseInt(properties.get('NumberOfTransactions'))
 const outputDirectory = properties.get('OutputDirectory')

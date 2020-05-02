@@ -1,5 +1,0 @@
-﻿method,api,org,clientapp,weigth,responseTimeSLABreach,failure,exception
-DataProviderImageGet,,,,100,,,
-DataProviderImageGet,,,,10,TRUE,,
-DataProviderImageGet,,,,5,,TRUE,
-DataProviderImageGet,,,,5,,,TRUE
