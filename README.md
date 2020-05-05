@@ -21,10 +21,10 @@ It takes up to 5 input parameters though app.properties
 - Mode
     - Fixed
         - The number defined is interpreted as the number of transactions desired
-    - RandomWeighted - allows get distributed data insteas
+    - RandomWeighted
         - Requires NumberOfTransactions input
         - Will generate NumberOfTransactions using the data set in a random fashion
-        - Randomness is controlled by the numbers we define for each record in the csv
+        - Randomness is controlled by a weighted distribution based on the numbers we define for each record in the csv
 - NumberOfTransactions
     - Required if Mode is set to 'RandomWeighted'
     - this will be the number of transactions that will be written to logs at every execution
