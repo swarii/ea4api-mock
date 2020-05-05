@@ -6,7 +6,7 @@ It is based on a cron job that triggers every minute '* * * * *'
 It takes up to 5 input parameters though app.properties
 
 - DataSetFile
-    - path to a CSV file with the following headers client_app,api,method,org,success,responseTimeSLABreach,failure,exception
+    - Path to a CSV file with the following headers client_app,api,method,org,success,responseTimeSLABreach,failure,exception
     - For each combination of client_app,api,method,org we can define a number for 
         - success: successful API call
         - responseTimeSLABreach: successful API call with a duration above 1s to trigger a response time issue
