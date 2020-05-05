@@ -22,7 +22,9 @@ It takes up to 5 input parameters though app.properties
         - Requires NumberOfTransactions input
         - Will generate NumberOfTransactions using the data set in a random fashion
         - Randomness is controlled by the numbers we define for each record in the csv
-- NumberOfTransactions=100000
+- NumberOfTransactions
+    - Required if Mode is set to 'RandomWeighted'
+    - this will be the number of transactions that will be written to logs at every execution
 
 
      
