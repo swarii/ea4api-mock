@@ -1,7 +1,10 @@
 # ea4api-mock
 This program generates API gateway log files for EA absorption
+
 It is based on a cron job that triggers every minute '* * * * *' 
+
 It takes up to 5 input parameters though app.properties
+
 - DataSetFile
     - path to a CSV file with the following headers client_app,api,method,org,success,responseTimeSLABreach,failure,exception
     - For each combination of client_app,api,method,org we can define a number for 
