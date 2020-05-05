@@ -5,7 +5,7 @@ let dataWeighted = []
 
 
 module.exports = {
-    load: async function (file) {
+    load: async function (mode, file) {
         await load(mode, file)
     },
     getRandomItem: function () {
@@ -16,10 +16,10 @@ module.exports = {
 async function load(mode, file) {
     const dataRaw = await csv2json().fromFile(file)
     if (mode == 'randomWeighted')
-        randomWeighted()
+        randomWeighted(dataRaw)
 }
 
-function randomWeighted() {
+function randomWeighted(dataRaw) {
     for (let i = 0; i < dataRaw.length; i++) {
         let it = dataRaw[i]
         pushWithWeight(cloneAndAssignStatus(it, true, false, false, false), resolveWeight(it.success, 'success'), dataWeighted)
@@ -46,11 +46,10 @@ function pushWithWeight(item, weigth, data) {
     let _weigth = weigth == '' ? 1 : parseInt(weigth)
     for (let i = 0; i < _weigth; i++)
         data.push(item)
-
 }
 
 function cloneAndAssignStatus(item, success, responseTimeSLABreach, failure, exception) {
-    const clone = JSON.parse(JSON.stringify(item)) //clone the object so we don't alter the original one
+    let clone = Object.assign({}, item) //clone the object so we don't alter the original one
     clone['success'] = success
     clone['responseSLABreach'] = responseTimeSLABreach
     clone['failure'] = failure

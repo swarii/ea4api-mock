@@ -1,53 +1,51 @@
 const uuid = require('uuid')
 
 module.exports = {
-    mock: function (randomItem) {
-        return mock(randomItem)
-    }
+    mock: function (randomItem) { return mock(randomItem) }
 }
 
 function mock(randomItem) {
+    let clone = Object.assign({}, template) //clone the object so we avoid any concurrency issue
 
-
-    template.correlationId = uuid.v4()
+    clone.correlationId = uuid.v4()
 
     let date = Date.now()
-    template.time = date
-    template.legs[0].timestamp = date
-    template.legs[1].timestamp = date
+    clone.time = date
+    clone.legs[0].timestamp = date
+    clone.legs[1].timestamp = date
 
-    template.serviceContexts[0].org = randomItem.org != "" ? randomItem.org : null
+    clone.serviceContexts[0].org = randomItem.org != "" ? randomItem.org : null
 
-    template.serviceContexts[0].app = randomItem.clientapp != "" ? randomItem.clientapp : null
+    clone.serviceContexts[0].app = randomItem.clientapp != "" ? randomItem.clientapp : null
 
     let api = randomItem.api != "" ? randomItem.api : null
-    template.serviceContexts[0].service = api
-    template.legs[0].serviceName = api
-    template.legs[1].serviceName = api
+    clone.serviceContexts[0].service = api
+    clone.legs[0].serviceName = api
+    clone.legs[1].serviceName = api
 
-    template.serviceContexts[0].method = randomItem.method
-    template.legs[0].operation = randomItem.method
-    template.legs[1].operation = randomItem.method
+    clone.serviceContexts[0].method = randomItem.method
+    clone.legs[0].operation = randomItem.method
+    clone.legs[1].operation = randomItem.method
 
-    template.protocol = 'http'
+    clone.protocol = 'http'
 
-    if (randomItem.failure) template.status = 'failure'
-    else if (randomItem.exception) template.status = 'exception'
-    else { // success, responseSLABreach which is a success with duration above threshold (1min)
-        template.status = 'success'
+    if (randomItem.failure) clone.status = 'failure'
+    else if (randomItem.exception) clone.status = 'exception'
+    else { // success or responseSLABreach which is a success with duration above threshold (1min)
+        clone.status = 'success'
         let duration
         if (randomItem.responseTimeSLABreach) duration = Math.round(Math.random() * 10000)
-        else duration = Math.round(Math.random() * 499) //total duration is sum of legs (2) duration - we want the the sum to be less than trehshold
-        template.duration = duration
-        template.serviceContexts[0].duration = duration
-        template.legs[0].duration = duration
-        template.legs[1].duration = duration
+        else duration = Math.round(Math.random() * 499) //total duration is sum of the 2 legs durations - 499 * 2 < 1000 we want the the sum to be less than trehshold
+        clone.duration = duration
+        clone.serviceContexts[0].duration = duration
+        clone.legs[0].duration = duration
+        clone.legs[1].duration = duration
     }
 
-    return template
+    return clone
 }
 
-let template = {
+const template = {
     type: "transaction",
     time: 1587770929215,
     path: "/api",
