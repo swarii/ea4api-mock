@@ -7,8 +7,10 @@ const dataset = require('./dataset')
 const properties = PropertiesReader(`${__dirname}/app.properties`)
 
 const outputDirectory = properties.get('OutputDirectory')
+const mode = properties.get('Mode')
 const numberOfTransactions = parseInt(properties.get('NumberOfTransactions'))
 const delayBetweenTransactions = (60 / numberOfTransactions) * 1000
+const trigger = properties.get('Trigger')
 
 run()
 
@@ -20,17 +22,25 @@ async function run() {
     log('Loading dataset')
     await dataset.load(properties.get('Mode'), properties.get('DataSetFile'))
 
-    if (properties.get('Trigger') == 'once') {
+    if (trigger == 'once') {
         log('Running once')
         log(`Generateing ${numberOfTransactions} transactions (${numberOfTransactions/60}/second)`)
         generate()
-
-    } else {
-        log('Running once every minute')
-        log(`Generating ${numberOfTransactions} transactions (${numberOfTransactions/60}/second)`)
-        cron.schedule('* * * * *', () => { // trigger once every minute
+    } 
+    
+    else {
+        
+        if (mode == 'RandomWeight'){
+            log('Running once every minute')
+            log(`Generating ${numberOfTransactions} transactions (${numberOfTransactions/60}/second)`)
+            cron.schedule('* * * * *', () => { // trigger once every minute
             generate()
-        })
+            })
+        }
+
+        else if (mode == 'Fixed'){
+            log('Fixed mode not supported yet. Only RandomWeight is supported')
+        }       
     }
 
 }

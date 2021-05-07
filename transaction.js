@@ -1,7 +1,7 @@
 const uuid = require('uuid')
 
 module.exports = {
-    mock: function (randomItem) { return mock(randomItem) }
+    mock: function () { return mock(randomItem) }
 }
 
 function mock(randomItem) {
